@@ -1,4 +1,4 @@
-package uz.pdp.pdperp.DTOS;
+package uz.pdp.pdperp.DTOS.responce;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AuthDto {
-    private String username;
-    private String password;
+public class JwtResponse {
+    String token;
 }

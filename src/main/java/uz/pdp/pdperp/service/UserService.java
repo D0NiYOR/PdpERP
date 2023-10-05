@@ -6,15 +6,18 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.pdp.pdperp.DTOS.AuthDto;
-import uz.pdp.pdperp.DTOS.UserCreateDto;
+import uz.pdp.pdperp.DTOS.request.AuthDto;
+import uz.pdp.pdperp.DTOS.request.UserCreateDto;
+import uz.pdp.pdperp.DTOS.responce.JwtResponse;
 import uz.pdp.pdperp.entity.enums.Permission;
 import uz.pdp.pdperp.entity.UserEntity;
 import uz.pdp.pdperp.entity.enums.UserRole;
 import uz.pdp.pdperp.exception.DataAlreadyExistsException;
 import uz.pdp.pdperp.exception.DataNotFoundException;
+import uz.pdp.pdperp.exception.jwt.JwtService;
 import uz.pdp.pdperp.repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -31,6 +34,8 @@ public class UserService  {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final JwtService jwtService;
 
     public String add(UserCreateDto dto) {
         Optional<UserEntity> userEntity = userRepository.findByUsername(dto.getUsername());
@@ -52,11 +57,13 @@ public class UserService  {
         return userEntity;
     }
 
-    public String signIn(AuthDto dto) {
-        Optional<UserEntity> byUsername = userRepository.findByUsername(dto.getUsername());
-
-        System.out.println(passwordEncoder.matches(dto.getPassword(), byUsername.get().getPassword()));
-        return null;
+    public JwtResponse signIn(AuthDto dto) {
+        UserEntity user = userRepository.findByUsername(dto.getUsername())
+                .orElseThrow(() -> new DataNotFoundException("user not found"));
+        if (passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            return new JwtResponse(jwtService.generateToken(user));
+        }
+        throw new AuthenticationCredentialsNotFoundException("password didn't match");
     }
 
     public List<UserEntity> getAll(int page, int size) {

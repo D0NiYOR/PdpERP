@@ -8,12 +8,11 @@ import uz.pdp.pdperp.entity.enums.GroupStatus;
 
 
 import java.util.List;
-
+@Entity(name = "groups")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-
 public class Group extends BaseEntity {
 
     @Column(unique = true , nullable = false)
@@ -23,10 +22,10 @@ public class Group extends BaseEntity {
     @Min(value = 10,message = "10 ta bolaga dars o'tish qoplamaydi")
     private Integer studentCount;
 
-    @OneToMany
+    @ManyToOne
     private Course course;
 
-    @OneToMany
+    @ManyToOne
     private MentorEntity mentorEntity;
 
     private GroupStatus status;

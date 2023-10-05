@@ -4,7 +4,7 @@ package uz.pdp.pdperp.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.pdperp.DTOS.UserCreateDto;
+import uz.pdp.pdperp.DTOS.request.UserCreateDto;
 import uz.pdp.pdperp.entity.UserEntity;
 import uz.pdp.pdperp.service.UserService;
 
@@ -24,7 +24,7 @@ public class UserController {
         return userService.add(userCreateDto);
     }
 
-    @PreAuthorize("hasRole('ADMIN') and hasAuthority('USER_READ')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('STUDENT_READ')")
     @GetMapping("/get-all")
     public List<UserEntity> getAll(
             @RequestParam int page,

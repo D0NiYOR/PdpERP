@@ -1,11 +1,14 @@
 package uz.pdp.pdperp.entity;
 
-import jakarta.persistence.ManyToMany;
+
+import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import uz.pdp.pdperp.entity.enums.LessonStatus;
 
 import java.util.List;
+@Entity(name = "lesson")
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -20,6 +23,7 @@ public class Lesson extends BaseEntity{
 
     private Integer lessonNumber;
 
+    @OneToMany
     private List<Attendance> attendances;
 
     private LessonStatus status;
