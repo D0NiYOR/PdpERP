@@ -4,16 +4,18 @@ package uz.pdp.pdperp.entity.enums;
 
 public enum Permission {
 
-    // book
+    USER_READ,
+    USER_ROLE_UPDATE,
+    USER_PERMISSION_UPDATE,
+    USER_DELETE,
+
     GROUP_READ,
     GROUP_CREATE,
     GROUP_DELETE,
     GROUP_UPDATE,
 
-    // order
     READ_ATTENDANCE,
 
-    // user
     STUDENT_CREATE,
     STUDENT_READ,
     STUDENT_UPDATE,
@@ -22,8 +24,12 @@ public enum Permission {
     MENTOR_CREATE,
     MENTOR_READ,
     MENTOR_UPDATE,
-    MENTOR_DELETE;
+    MENTOR_DELETE,
 
+    COURSE_CREATE,
+    COURSE_READ,
+    COURSE_UPDATE,
+    COURSE_DELETE,
 
 
 

@@ -24,10 +24,5 @@ public class MentorController {
         System.out.println();
         return mentorService.create(dto, ownerId);
     }
-    //@PreAuthorize("hasRole('ADMIN') and hasAuthority('MENTOR_CREATE')")
-    @GetMapping
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Ishlaginda");
-    }
 
 }

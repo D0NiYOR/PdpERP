@@ -18,17 +18,8 @@ import java.time.LocalDateTime;
 @Setter
 public class Course extends BaseEntity{
     private String name;
-
-    @CreationTimestamp
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime startDate;
-
-    @UpdateTimestamp
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime endDate;
-
     private Integer moduleCount;
 
 }
