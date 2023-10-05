@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/pdp_erp
     username: postgres
-    password: doni2045
+    password: 2323
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -13,5 +13,5 @@ spring:
         show_sql: true
         format_sql: true
 jwt:
-  expiry: 3000000000
+  expiry: 3000000
   secret: qwetuykyjhfdgrkuisafgjhkoiutrefdsavzbxcnmktjyhretgwedfvbnjkrjyerhsfg

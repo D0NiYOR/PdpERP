@@ -1,14 +1,18 @@
 package uz.pdp.pdperp.controller;
 
-import com.example.springsecurity.DTOS.AuthDto;
-import com.example.springsecurity.DTOS.UserCreateDto;
-import com.example.springsecurity.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uz.pdp.pdperp.DTOS.request.AuthDto;
+import uz.pdp.pdperp.DTOS.request.UserCreateDto;
+import uz.pdp.pdperp.DTOS.responce.JwtResponse;
+import uz.pdp.pdperp.service.UserService;
 
 @RestController
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
@@ -20,8 +24,7 @@ public class AuthController {
 
 
     @PostMapping("/sign-in")
-    public String test (@RequestBody AuthDto dto) {
-        userService.signIn(dto);
-        return "test";
+    public JwtResponse test (@RequestBody AuthDto dto) {
+        return userService.signIn(dto);
     }
 }

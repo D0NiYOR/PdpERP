@@ -1,4 +1,4 @@
-package uz.pdp.pdperp.DTOS;
+package uz.pdp.pdperp.DTOS.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
