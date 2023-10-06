@@ -28,6 +28,9 @@ public class Group extends BaseEntity {
     @ManyToOne
     private MentorEntity mentorEntity;
 
+    @OneToMany
+    private List<Lesson> lessons;
+
     private GroupStatus status;
 
 

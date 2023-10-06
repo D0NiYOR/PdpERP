@@ -14,6 +14,9 @@ import uz.pdp.pdperp.repository.MentorRepository;
 import uz.pdp.pdperp.repository.StudentRepository;
 import uz.pdp.pdperp.repository.UserRepository;
 
+import java.util.List;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class StudentService {
@@ -27,10 +30,14 @@ public class StudentService {
         Group group = groupRepository.findById(dto.getGroupId()).orElseThrow(
                 () -> new DataNotFoundException("group not found"));
         StudentEntity student = modelMapper.map(dto, StudentEntity.class);
-        student.setActive(dto.isActive());
+        student.setActive(true);
         student.setGroup(group);
         student.setUserEntity(user);
         studentRepository.save(student);
         return "create";
+    }
+
+    public List<StudentEntity> getAll(UUID groupId) {
+        return studentRepository.findStudentEntitiesByGroup_Id(groupId);
     }
 }

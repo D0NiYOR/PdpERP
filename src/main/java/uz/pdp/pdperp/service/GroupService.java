@@ -6,14 +6,18 @@ import org.springframework.stereotype.Service;
 import uz.pdp.pdperp.DTOS.request.GroupCreateDto;
 import uz.pdp.pdperp.entity.Course;
 import uz.pdp.pdperp.entity.Group;
+import uz.pdp.pdperp.entity.Lesson;
 import uz.pdp.pdperp.entity.MentorEntity;
 import uz.pdp.pdperp.exception.DataNotFoundException;
 import uz.pdp.pdperp.repository.CourseRepository;
 import uz.pdp.pdperp.repository.GroupRepository;
+import uz.pdp.pdperp.repository.LessonRepository;
 import uz.pdp.pdperp.repository.MentorRepository;
 
 import java.util.List;
 import java.util.UUID;
+
+import static uz.pdp.pdperp.entity.enums.LessonStatus.CREATED;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class GroupService {
     private final MentorRepository mentorRepository;
     private final CourseRepository courseRepository;
     private final ModelMapper modelMapper;
+    private final LessonRepository lessonRepository;
     public String create(GroupCreateDto dto) {
         MentorEntity mentor = mentorRepository.findById(dto.getMentorId()).orElseThrow(
                 () -> new DataNotFoundException("mentor not fount"));
@@ -31,6 +36,16 @@ public class GroupService {
         group.setCourse(course);
         group.setMentorEntity(mentor);
         groupRepository.save(group);
+
+
+        Lesson lesson = Lesson.builder()
+                .group(group)
+                .lessonNumber(12)
+                .module(1)
+                .status(CREATED)
+                .build();
+        lessonRepository.save(lesson);
+
         return "create";
     }
 
@@ -63,9 +78,12 @@ public class GroupService {
     }
 
     public String delete(UUID groupId) {
-        groupRepository.findById(groupId).orElseThrow(
-                () -> new DataNotFoundException("group not found"));
+        groupRepository.findById(groupId)
+                .orElseThrow(() -> new DataNotFoundException("group not found"));
+        System.out.println();
+        lessonRepository.deleteAll(lessonRepository.findLessonsByGroup_Id(groupId));
         groupRepository.deleteById(groupId);
         return "delete✅";
     }
+
 }
