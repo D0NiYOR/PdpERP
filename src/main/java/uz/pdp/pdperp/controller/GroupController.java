@@ -20,11 +20,12 @@ public class GroupController {
     public String create(@RequestBody GroupCreateDto dto) {
         return groupService.create(dto);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or 'MENTOR'")
     @GetMapping("/get-all/{mentorId}")
     public List<Group> getAll(@PathVariable UUID mentorId) {
         return groupService.getAll(mentorId);
     }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{groupId}")
