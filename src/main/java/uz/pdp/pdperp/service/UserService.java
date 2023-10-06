@@ -66,18 +66,24 @@ public class UserService  {
         throw new AuthenticationCredentialsNotFoundException("password didn't match");
     }
 
-    public List<UserEntity> getAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findAll(pageable).getContent();
+    public List<UserEntity> getAll() {
+        return userRepository.findAll();
     }
-    public UserEntity update(UUID id, String role) {
+    public UserEntity updateRole(UUID id, String role) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("user not found")
         );
         userEntity.setRole(UserRole.valueOf(role));
         userEntity.setUpdatedDate(LocalDateTime.now());
-        UserEntity save = userRepository.save(userEntity);
-        return save;
+        return userRepository.save(userEntity);
+    }
+    public UserEntity updatePermission(UUID id, Set<Permission> permissions) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("user not found")
+        );
+        userEntity.setPermissions(permissions);
+        userEntity.setUpdatedDate(LocalDateTime.now());
+        return userRepository.save(userEntity);
     }
 
     public String delete(UUID userId) {

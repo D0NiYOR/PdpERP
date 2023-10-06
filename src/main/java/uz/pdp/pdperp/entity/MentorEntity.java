@@ -13,6 +13,7 @@ public class MentorEntity extends BaseEntity{
 
     @OneToOne
     private UserEntity userEntity;
+    private String languageName;
     private Double experience;
     private Double salary;
 }
