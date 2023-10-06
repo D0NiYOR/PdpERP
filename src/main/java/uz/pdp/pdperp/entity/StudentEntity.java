@@ -11,7 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class StudentEntity extends BaseEntity{
+public class StudentEntity extends BaseEntity {
+
+    boolean isActive;
     @OneToOne
     private UserEntity userEntity;
 
