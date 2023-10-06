@@ -30,7 +30,6 @@ public class Group extends BaseEntity {
 
     private GroupStatus status;
 
-   //private Integer duration modulcount
 
 
 }

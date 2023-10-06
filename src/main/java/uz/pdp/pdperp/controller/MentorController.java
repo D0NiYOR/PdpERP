@@ -1,11 +1,9 @@
 package uz.pdp.pdperp.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.pdperp.DTOS.request.MentorCreateDto;
-import uz.pdp.pdperp.entity.MentorEntity;
 import uz.pdp.pdperp.service.MentorService;
 
 import java.util.UUID;
