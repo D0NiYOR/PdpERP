@@ -22,11 +22,8 @@ public class UserController {
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping("/get-all")
-    public List<UserEntity> getAll(
-            @RequestParam int page,
-            @RequestParam int size
-    ) {
-        return userService.getAll(page, size);
+    public List<UserEntity> getAll() {
+        return userService.getAll();
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")

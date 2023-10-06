@@ -66,9 +66,8 @@ public class UserService  {
         throw new AuthenticationCredentialsNotFoundException("password didn't match");
     }
 
-    public List<UserEntity> getAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findAll(pageable).getContent();
+    public List<UserEntity> getAll() {
+        return userRepository.findAll();
     }
     public UserEntity updateRole(UUID id, String role) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(

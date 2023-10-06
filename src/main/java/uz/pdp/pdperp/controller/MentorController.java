@@ -15,13 +15,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MentorController {
     private final MentorService mentorService;
-    @PreAuthorize("hasRole('ADMIN') and hasAuthority('MENTOR_CREATE')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create/{ownerId}")
     public String create(
             @PathVariable UUID ownerId,
             @RequestBody MentorCreateDto dto
     ) {
-        System.out.println();
         return mentorService.create(dto, ownerId);
     }
 

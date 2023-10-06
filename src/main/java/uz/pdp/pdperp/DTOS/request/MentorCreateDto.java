@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MentorCreateDto {
+    private String languageName;
     private Double experience;
     private Double salary;
 }
