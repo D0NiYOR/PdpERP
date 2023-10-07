@@ -11,9 +11,14 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import uz.pdp.pdperp.exception.jwt.AuthenticationService;
+import uz.pdp.pdperp.exception.jwt.JwtFilter;
+import uz.pdp.pdperp.exception.jwt.JwtService;
 import uz.pdp.pdperp.service.AuthService;
 
 @Configuration
@@ -22,6 +27,9 @@ import uz.pdp.pdperp.service.AuthService;
 @EnableMethodSecurity
 public class SpringConfig {
     private final AuthService authService;
+    private final JwtService jwtService;
+    private final AuthenticationService authenticationService;
+
 
     private final String[] WHITE_LIST = {"/auth/sign-up","/auth/sign-in"};
 
@@ -34,7 +42,11 @@ public class SpringConfig {
                             .requestMatchers(WHITE_LIST).permitAll()
                             .anyRequest().authenticated();
                 })
-                .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(new JwtFilter(jwtService, authenticationService),
+                        UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(
+                        (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .httpBasic(Customizer.withDefaults())
                 .build();
     }
 
