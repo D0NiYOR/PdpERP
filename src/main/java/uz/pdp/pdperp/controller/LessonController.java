@@ -19,7 +19,8 @@ public class LessonController {
     @PutMapping("/update-status/{lessonId}")
     public Lesson updateStatus(
             @PathVariable UUID lessonId,
-            @RequestParam LessonStatus status
+            @RequestParam LessonStatus status,
+            @RequestParam Lis
     ) {
         return lessonService.updateStatus(lessonId, status);
     }

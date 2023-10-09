@@ -7,7 +7,8 @@ import java.util.Set;
 
 @Component
 @Data
-public class UserCreateDto {
+public class
+UserCreateDto {
     private String name;
     private String username;
     private String password;
