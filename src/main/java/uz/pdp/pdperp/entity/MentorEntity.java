@@ -5,11 +5,12 @@ import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Entity(name = "mentor")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class MentorEntity extends BaseEntity{
+public class MentorEntity extends BaseEntity {
 
     @OneToOne
     private UserEntity userEntity;

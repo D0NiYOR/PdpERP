@@ -1,4 +1,4 @@
-package uz.pdp.pdperp.exception.jwt;
+package uz.pdp.pdperp.config.jwt;
 
 
 import io.jsonwebtoken.Claims;
@@ -14,28 +14,18 @@ import java.util.List;
 @Service
 public class AuthenticationService {
 
-    public void authenticate(
-            Claims claims,
-            HttpServletRequest request
-    ) {
+    public void authenticate(Claims claims, HttpServletRequest request) {
         String userId = claims.getSubject();
         List<String> roles = (List<String>) claims.get("roles");
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(
-                        userId, null, getAuthorities(roles)
-                );
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, null, getAuthorities(roles));
 
-        authenticationToken.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request)
-        );
+        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 
     public List<SimpleGrantedAuthority> getAuthorities(List<String> roles) {
-        return roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .toList();
+        return roles.stream().map(SimpleGrantedAuthority::new).toList();
     }
 }

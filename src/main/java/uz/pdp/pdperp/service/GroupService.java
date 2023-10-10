@@ -27,6 +27,7 @@ public class GroupService {
     private final CourseRepository courseRepository;
     private final ModelMapper modelMapper;
     private final LessonRepository lessonRepository;
+
     public String create(GroupCreateDto dto) {
         MentorEntity mentor = mentorRepository.findById(dto.getMentorId()).orElseThrow(
                 () -> new DataNotFoundException("mentor not fount"));
@@ -37,20 +38,21 @@ public class GroupService {
         group.setMentorEntity(mentor);
         groupRepository.save(group);
 
-
-        Lesson lesson = Lesson.builder()
-                .group(group)
-                .lessonNumber(12)
-                .module(1)
-                .status(CREATED)
-                .build();
-        lessonRepository.save(lesson);
+        for (int i = 1; i <= 12; i++) {
+            Lesson lesson = Lesson.builder()
+                    .group(group)
+                    .lessonNumber(i)
+                    .module(1)
+                    .status(CREATED)
+                    .build();
+            lessonRepository.save(lesson);
+        }
 
         return "create";
     }
 
     public List<Group> getAll(UUID mentorId) {
-        if(mentorId == null) {
+        if (mentorId == null) {
             return groupRepository.findAll();
         }
         return groupRepository.findAllByMentorEntity_Id(mentorId);
@@ -60,10 +62,10 @@ public class GroupService {
 
         Group group = groupRepository.findById(groupId).orElseThrow(
                 () -> new DataNotFoundException("group not found"));
-        if(dto.getMentorId() != null) {
+        if (dto.getMentorId() != null) {
             MentorEntity mentor = mentorRepository.findById(dto.getMentorId())
                     .orElseThrow(() -> new DataNotFoundException("mentor not fount"));
-             group.setMentorEntity(mentor);
+            group.setMentorEntity(mentor);
         }
         if ((dto.getGroupName()) != null && !(dto.getGroupName().equals(""))) {
             group.setGroupName(dto.getGroupName());
@@ -71,16 +73,18 @@ public class GroupService {
         if (dto.getStatus() != null) {
             group.setStatus(dto.getStatus());
         }
-        if(dto.getStudentCount() != null) {
+        if (dto.getStudentCount() != null) {
             group.setStudentCount(dto.getStudentCount());
         }
         return groupRepository.save(group);
     }
 
     public String delete(UUID groupId) {
-        groupRepository.findById(groupId)
-                .orElseThrow(() -> new DataNotFoundException("group not found"));
-        System.out.println();
+
+        if (!groupRepository.existsById(groupId)) {
+            throw new DataNotFoundException("group not found");
+        }
+
         lessonRepository.deleteAll(lessonRepository.findLessonsByGroup_Id(groupId));
         groupRepository.deleteById(groupId);
         return "delete✅";

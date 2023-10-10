@@ -12,12 +12,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+
 @Entity(name = "course")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Course extends BaseEntity{
+public class Course extends BaseEntity {
     @Column(unique = true)
     private String name;
     private LocalDateTime startDate;

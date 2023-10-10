@@ -1,6 +1,7 @@
 package uz.pdp.pdperp.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -15,9 +16,9 @@ import lombok.Setter;
 @Setter
 public class Attendance extends BaseEntity {
     @ManyToOne
-    private Lesson lesson ;
+    private Lesson lesson;
     @OneToOne
-    private StudentEntity student ;
+    private StudentEntity student;
 
     private boolean status;
 

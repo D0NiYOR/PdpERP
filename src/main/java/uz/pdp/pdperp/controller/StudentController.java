@@ -1,5 +1,6 @@
 package uz.pdp.pdperp.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +20,10 @@ public class StudentController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public String create(@RequestBody StudentCreateDto dto) {
+    public String create(@Valid  @RequestBody StudentCreateDto dto) {
         return studentService.create(dto);
     }
+
     @PreAuthorize("hasRole('ADMIN') or hasRole('MENTOR')")
     @GetMapping("/get-all/{groupId}")
     public List<StudentEntity> getAll(@PathVariable UUID groupId) {

@@ -1,5 +1,7 @@
 package uz.pdp.pdperp.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +16,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CourseController {
     private final CourseService courseService;
+
     @PreAuthorize("hasRole('ADMIN') and hasAuthority('COURSE_CREATE')")
     @PostMapping("/create")
-    public String create(@RequestBody Course course) {
+    public String create(@Valid @RequestBody Course course) {
         return courseService.create(course);
     }
 
@@ -29,15 +32,16 @@ public class CourseController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{courseId}")
     public Course update(
-            @PathVariable UUID courseId,
-            @RequestBody Course course
+            @PathVariable @NotNull UUID courseId,
+            @Valid @RequestBody Course course
     ) {
         return courseService.updateById(courseId, course);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{courseId}")
     public String delete(
-            @PathVariable UUID courseId
+            @PathVariable @NotNull UUID courseId
     ) {
         return courseService.deleteById(courseId);
     }

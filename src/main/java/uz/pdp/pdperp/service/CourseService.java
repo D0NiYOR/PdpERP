@@ -1,6 +1,7 @@
 package uz.pdp.pdperp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import uz.pdp.pdperp.entity.Course;
 import uz.pdp.pdperp.exception.DataNotFoundException;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CourseService {
     private final CourseRepository courseRepository;
+    private final ModelMapper modelMapper;
 
     public String create(Course course) {
         courseRepository.save(course);
@@ -26,17 +28,16 @@ public class CourseService {
     public Course updateById(UUID courseId, Course update) {
         Course course = courseRepository.findById(courseId).orElseThrow(
                 () -> new DataNotFoundException("Course not found"));
-        course.setName(update.getName());
-        course.setModuleCount(update.getModuleCount());
-        course.setStartDate(update.getStartDate());
-        course.setEndDate(update.getEndDate());
+        modelMapper.map(update, course);
         courseRepository.save(course);
         return course;
     }
 
     public String deleteById(UUID courseId) {
-        courseRepository.findById(courseId).orElseThrow(
-                () -> new DataNotFoundException("Course not found"));
+        if (!courseRepository.existsById(courseId)) {
+            throw new DataNotFoundException("Course not found");
+        }
+
         courseRepository.deleteById(courseId);
         return "delete";
     }
