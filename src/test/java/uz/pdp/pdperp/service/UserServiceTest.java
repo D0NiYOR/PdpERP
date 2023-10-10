@@ -26,6 +26,7 @@ import static uz.pdp.pdperp.entity.enums.Permission.*;
 
 class UserServiceTest {
 
+
     @Mock
     private ModelMapper modelMapper;
     @Mock
