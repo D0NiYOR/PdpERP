@@ -12,10 +12,12 @@ import uz.pdp.pdperp.DTOS.request.UserCreateDto;
 import uz.pdp.pdperp.DTOS.responce.JwtResponse;
 import uz.pdp.pdperp.config.jwt.JwtService;
 import uz.pdp.pdperp.entity.UserEntity;
+import uz.pdp.pdperp.entity.enums.Permission;
 import uz.pdp.pdperp.entity.enums.UserRole;
 import uz.pdp.pdperp.exception.DataNotFoundException;
 import uz.pdp.pdperp.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -92,11 +94,21 @@ class UserServiceTest {
 
     @Test
     void updatePermission() {
+        Set<Permission> newPermission = new HashSet<>();
+        newPermission.add(STUDENT_DELETE);
+        newPermission.add(STUDENT_UPDATE);
 
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        userService.updatePermission(user.getId(), newPermission);
+        assertEquals(newPermission, user.getPermissions());
     }
 
 
     @Test
     void delete() {
+        when(userRepository.existsById(userId)).thenReturn(true);
+        String delete = userService.delete(userId);
+        assertEquals("user delete", delete);
     }
 }

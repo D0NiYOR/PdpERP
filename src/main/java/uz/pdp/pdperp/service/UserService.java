@@ -74,7 +74,6 @@ public class UserService {
 
         UserEntity userEntity = findById(id);
         userEntity.setPermissions(permissions);
-        userEntity.setUpdatedDate(LocalDateTime.now());
         return userRepository.save(userEntity);
     }
 
