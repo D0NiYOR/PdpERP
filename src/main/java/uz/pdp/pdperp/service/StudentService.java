@@ -24,6 +24,7 @@ public class StudentService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final ModelMapper modelMapper;
+
     public String create(StudentCreateDto dto) {
         UserEntity user = userRepository.findById(dto.getUserId()).orElseThrow(
                 () -> new DataNotFoundException("User not found"));
@@ -37,7 +38,8 @@ public class StudentService {
         return "create";
     }
 
-    public List<StudentEntity> getAll(UUID groupId) {
+    public List<StudentEntity>
+    getAll(UUID groupId) {
         return studentRepository.findStudentEntitiesByGroup_Id(groupId);
     }
 }

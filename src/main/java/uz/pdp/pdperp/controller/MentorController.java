@@ -1,5 +1,6 @@
 package uz.pdp.pdperp.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +14,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MentorController {
     private final MentorService mentorService;
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create/{ownerId}")
     public String create(
             @PathVariable UUID ownerId,
-            @RequestBody MentorCreateDto dto
+            @Valid @RequestBody MentorCreateDto dto
     ) {
         return mentorService.create(dto, ownerId);
     }

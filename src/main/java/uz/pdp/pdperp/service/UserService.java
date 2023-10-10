@@ -4,8 +4,6 @@ package uz.pdp.pdperp.service;
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,7 @@ import uz.pdp.pdperp.entity.UserEntity;
 import uz.pdp.pdperp.entity.enums.UserRole;
 import uz.pdp.pdperp.exception.DataAlreadyExistsException;
 import uz.pdp.pdperp.exception.DataNotFoundException;
-import uz.pdp.pdperp.exception.jwt.JwtService;
+import uz.pdp.pdperp.config.jwt.JwtService;
 import uz.pdp.pdperp.repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -30,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UserService  {
+public class UserService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -39,8 +37,8 @@ public class UserService  {
 
     public String add(UserCreateDto dto) {
         Optional<UserEntity> userEntity = userRepository.findByUsername(dto.getUsername());
-        if(userEntity.isPresent()) {
-            throw  new DataAlreadyExistsException("User already exists");
+        if (userEntity.isPresent()) {
+            throw new DataAlreadyExistsException("User already exists");
         }
         UserEntity map = modelMapper.map(dto, UserEntity.class);
         setPermissions(map, dto.getPermissions());
@@ -69,28 +67,30 @@ public class UserService  {
     public List<UserEntity> getAll() {
         return userRepository.findAll();
     }
+
     public UserEntity updateRole(UUID id, String role) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(
-                () -> new DataNotFoundException("user not found")
-        );
+        UserEntity userEntity = findById(id);
         userEntity.setRole(UserRole.valueOf(role));
         userEntity.setUpdatedDate(LocalDateTime.now());
         return userRepository.save(userEntity);
     }
+
     public UserEntity updatePermission(UUID id, Set<Permission> permissions) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(
-                () -> new DataNotFoundException("user not found")
-        );
+
+        UserEntity userEntity = findById(id);
         userEntity.setPermissions(permissions);
         userEntity.setUpdatedDate(LocalDateTime.now());
         return userRepository.save(userEntity);
     }
 
     public String delete(UUID userId) {
-        userRepository.findById(userId).orElseThrow(
-                () -> new DataNotFoundException("user not found")
-        );
+        findById(userId);
         userRepository.deleteById(userId);
         return "user delete";
+    }
+
+    private UserEntity findById(UUID userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new DataNotFoundException("user not found"));
     }
 }

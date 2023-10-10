@@ -1,5 +1,7 @@
 package uz.pdp.pdperp.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +17,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GroupController {
     private final GroupService groupService;
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public String create(@RequestBody GroupCreateDto dto) {
+    public String create(@Valid @RequestBody GroupCreateDto dto) {
+        System.out.println();
         return groupService.create(dto);
     }
-    @PreAuthorize("hasRole('ADMIN') or 'MENTOR'")
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR')")
     @GetMapping("/get-all/{mentorId}")
-    public List<Group> getAll(@PathVariable UUID mentorId) {
+    public List<Group> getAll(@PathVariable @NotNull UUID mentorId) {
         return groupService.getAll(mentorId);
     }
 
@@ -30,15 +35,15 @@ public class GroupController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{groupId}")
     public Group update(
-            @PathVariable UUID groupId,
-            @RequestBody GroupCreateDto dto
+            @PathVariable @NotNull UUID groupId,
+            @Valid @RequestBody GroupCreateDto dto
     ) {
-       return groupService.update(groupId, dto);
+        return groupService.update(groupId, dto);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{groupId}")
-    public String delete(@PathVariable UUID groupId) {
+    public String delete(@PathVariable @NotNull UUID groupId) {
         return groupService.delete(groupId);
     }
 }

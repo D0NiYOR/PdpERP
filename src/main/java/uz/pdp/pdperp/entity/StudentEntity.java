@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Entity(name = "student")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +18,7 @@ public class StudentEntity extends BaseEntity {
     @OneToOne
     private UserEntity userEntity;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Group group;
 
 }

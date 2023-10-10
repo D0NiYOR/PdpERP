@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,9 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import uz.pdp.pdperp.exception.jwt.AuthenticationService;
-import uz.pdp.pdperp.exception.jwt.JwtFilter;
-import uz.pdp.pdperp.exception.jwt.JwtService;
+import uz.pdp.pdperp.config.jwt.AuthenticationService;
+import uz.pdp.pdperp.config.jwt.JwtFilter;
+import uz.pdp.pdperp.config.jwt.JwtService;
 import uz.pdp.pdperp.service.AuthService;
 
 @Configuration
@@ -31,10 +30,10 @@ public class SpringConfig {
     private final AuthenticationService authenticationService;
 
 
-    private final String[] WHITE_LIST = {"/auth/sign-up","/auth/sign-in"};
+    private final String[] WHITE_LIST = {"/auth/sign-up", "/auth/sign-in"};
 
     @Bean
-    public SecurityFilterChain configure (HttpSecurity http) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requestConfigurer -> {
@@ -51,7 +50,7 @@ public class SpringConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager (HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(authService)
@@ -60,7 +59,7 @@ public class SpringConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder () {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

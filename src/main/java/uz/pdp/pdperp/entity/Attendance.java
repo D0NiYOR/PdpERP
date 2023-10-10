@@ -16,9 +16,9 @@ import lombok.Setter;
 @Setter
 public class Attendance extends BaseEntity {
     @ManyToOne
-    private Lesson lesson ;
+    private Lesson lesson;
     @OneToOne
-    private StudentEntity student ;
+    private StudentEntity student;
 
     private boolean status;
 

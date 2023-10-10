@@ -21,7 +21,7 @@ public class Lesson extends BaseEntity {
 
     private Integer lessonNumber;
 
-//    @OneToMany
+    //    @OneToMany
 //    private List<Attendance> attendances;
     private LessonStatus status;
 }

@@ -31,9 +31,10 @@ public class UserController {
     public UserEntity updateRole(
             @PathVariable UUID id,
             @RequestParam String role
-            ) {
+    ) {
         return userService.updateRole(id, role);
     }
+
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping("/{id}/update-permission")
     public UserEntity updatePermission(

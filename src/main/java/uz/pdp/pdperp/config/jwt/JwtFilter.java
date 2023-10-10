@@ -1,4 +1,4 @@
-package uz.pdp.pdperp.exception.jwt;
+package uz.pdp.pdperp.config.jwt;
 
 
 import io.jsonwebtoken.Claims;

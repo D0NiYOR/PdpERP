@@ -1,5 +1,6 @@
 package uz.pdp.pdperp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,8 +26,9 @@ import java.util.Set;
 public class UserEntity extends BaseEntity implements UserDetails {
 
     private String name;
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
+    @JsonIgnore
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
