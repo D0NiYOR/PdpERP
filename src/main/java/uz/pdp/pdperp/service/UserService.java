@@ -32,7 +32,6 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
     private final JwtService jwtService;
 
     public String add(UserCreateDto dto) {
@@ -47,17 +46,14 @@ public class UserService {
         return "Successfully signed up";
     }
 
-    private UserEntity setPermissions(UserEntity userEntity, Set<String> permissions) {
-        Set<Permission> collect = permissions.stream()
-                .map(permission -> Permission.valueOf(permission.toUpperCase()))
-                .collect(Collectors.toSet());
+    public UserEntity setPermissions(UserEntity userEntity, Set<String> permissions) {
+        Set<Permission> collect = permissions.stream().map(permission -> Permission.valueOf(permission.toUpperCase())).collect(Collectors.toSet());
         userEntity.setPermissions(collect);
         return userEntity;
     }
 
     public JwtResponse signIn(AuthDto dto) {
-        UserEntity user = userRepository.findByUsername(dto.getUsername())
-                .orElseThrow(() -> new DataNotFoundException("user not found"));
+        UserEntity user = userRepository.findByUsername(dto.getUsername()).orElseThrow(() -> new DataNotFoundException("user not found"));
         if (passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             return new JwtResponse(jwtService.generateToken(user));
         }
@@ -71,7 +67,6 @@ public class UserService {
     public UserEntity updateRole(UUID id, String role) {
         UserEntity userEntity = findById(id);
         userEntity.setRole(UserRole.valueOf(role));
-        userEntity.setUpdatedDate(LocalDateTime.now());
         return userRepository.save(userEntity);
     }
 
@@ -84,13 +79,14 @@ public class UserService {
     }
 
     public String delete(UUID userId) {
-        findById(userId);
+        if (!userRepository.existsById(userId)) {
+            throw new DataNotFoundException("user not found");
+        }
         userRepository.deleteById(userId);
         return "user delete";
     }
 
     private UserEntity findById(UUID userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new DataNotFoundException("user not found"));
+        return userRepository.findById(userId).orElseThrow(() -> new DataNotFoundException("user not found"));
     }
 }
