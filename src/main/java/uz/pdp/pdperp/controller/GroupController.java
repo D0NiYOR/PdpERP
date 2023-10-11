@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.pdperp.DTOS.request.GroupCreateDto;
+import uz.pdp.pdperp.DTOS.request.UpdateGroupDto;
 import uz.pdp.pdperp.entity.Group;
 import uz.pdp.pdperp.service.GroupService;
 
@@ -36,7 +37,7 @@ public class GroupController {
     @PutMapping("/update/{groupId}")
     public Group update(
             @PathVariable @NotNull UUID groupId,
-            @Valid @RequestBody GroupCreateDto dto
+            @Valid @RequestBody UpdateGroupDto dto
     ) {
         return groupService.update(groupId, dto);
     }

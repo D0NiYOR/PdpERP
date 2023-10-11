@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import uz.pdp.pdperp.DTOS.request.GroupCreateDto;
+import uz.pdp.pdperp.DTOS.request.UpdateGroupDto;
 import uz.pdp.pdperp.entity.Course;
 import uz.pdp.pdperp.entity.Group;
 import uz.pdp.pdperp.entity.Lesson;
@@ -58,24 +59,11 @@ public class GroupService {
         return groupRepository.findAllByMentorEntity_Id(mentorId);
     }
 
-    public Group update(UUID groupId, GroupCreateDto dto) {
+    public Group update(UUID groupId, UpdateGroupDto dto) {
 
         Group group = groupRepository.findById(groupId).orElseThrow(
                 () -> new DataNotFoundException("group not found"));
-        if (dto.getMentorId() != null) {
-            MentorEntity mentor = mentorRepository.findById(dto.getMentorId())
-                    .orElseThrow(() -> new DataNotFoundException("mentor not fount"));
-            group.setMentorEntity(mentor);
-        }
-        if ((dto.getGroupName()) != null && !(dto.getGroupName().equals(""))) {
-            group.setGroupName(dto.getGroupName());
-        }
-        if (dto.getStatus() != null) {
-            group.setStatus(dto.getStatus());
-        }
-        if (dto.getStudentCount() != null) {
-            group.setStudentCount(dto.getStudentCount());
-        }
+        modelMapper.map(dto, group);
         return groupRepository.save(group);
     }
 

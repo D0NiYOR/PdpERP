@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Course extends BaseEntity {
     @Column(unique = true)
     private String name;
