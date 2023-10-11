@@ -38,8 +38,7 @@ public class StudentService {
         return "create";
     }
 
-    public List<StudentEntity>
-    getAll(UUID groupId) {
+    public List<StudentEntity> getAll(UUID groupId) {
         return studentRepository.findStudentEntitiesByGroup_Id(groupId);
     }
 }
