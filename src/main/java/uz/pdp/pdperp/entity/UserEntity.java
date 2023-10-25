@@ -1,10 +1,7 @@
 package uz.pdp.pdperp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,15 +22,21 @@ import java.util.Set;
 @Setter
 public class UserEntity extends BaseEntity implements UserDetails {
 
+    @Column(nullable = false)
     private String name;
     @Column(nullable = false, unique = true)
-    private String username;
-    @JsonIgnore
+    private String email;
+    @Column(nullable = false)
+//    @JsonIgnore
     private String password;
+    @Embedded
+    private VerificationEntity verificationEntity;
     @Enumerated(EnumType.STRING)
     private UserRole role;
     @Enumerated(EnumType.STRING)
     private Set<Permission> permissions;
+
+    private boolean delete;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -54,7 +57,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override

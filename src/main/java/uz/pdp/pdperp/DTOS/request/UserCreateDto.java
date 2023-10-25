@@ -11,16 +11,14 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class
 UserCreateDto {
     @NotBlank(message = "name must not be blank")
     private String name;
     @NotBlank(message = "username must not be blank")
-    private String username;
+    private String email;
     @NotBlank(message = "password must not be blank")
     private String password;
-    @NotBlank(message = "user role must not be blank")
-    private String role;
-    private Set<String> permissions;
 
 }

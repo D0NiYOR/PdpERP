@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Setter
 @Getter
-public class GroupCreateDto {
+public class GroupCreateDTD {
     @NotBlank(message = "group name must not be blank")
     private String groupName;
     @NotNull(message = "user id must not be blank")

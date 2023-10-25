@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.pdperp.DTOS.request.GroupCreateDto;
+import uz.pdp.pdperp.DTOS.request.GroupCreateDTD;
 import uz.pdp.pdperp.DTOS.request.UpdateGroupDto;
 import uz.pdp.pdperp.entity.Group;
 import uz.pdp.pdperp.service.GroupService;
@@ -21,7 +21,7 @@ public class GroupController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public String create(@Valid @RequestBody GroupCreateDto dto) {
+    public String create(@Valid @RequestBody GroupCreateDTD dto) {
         System.out.println();
         return groupService.create(dto);
     }
@@ -39,6 +39,7 @@ public class GroupController {
             @PathVariable @NotNull UUID groupId,
             @Valid @RequestBody UpdateGroupDto dto
     ) {
+        System.out.println();
         return groupService.update(groupId, dto);
     }
 
