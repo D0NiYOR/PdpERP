@@ -3,7 +3,7 @@ package uz.pdp.pdperp.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import uz.pdp.pdperp.DTOS.request.GroupCreateDto;
+import uz.pdp.pdperp.DTOS.request.GroupCreateDTD;
 import uz.pdp.pdperp.DTOS.request.UpdateGroupDto;
 import uz.pdp.pdperp.entity.Course;
 import uz.pdp.pdperp.entity.Group;
@@ -15,10 +15,13 @@ import uz.pdp.pdperp.repository.GroupRepository;
 import uz.pdp.pdperp.repository.LessonRepository;
 import uz.pdp.pdperp.repository.MentorRepository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.UUID;
 
 import static uz.pdp.pdperp.entity.enums.LessonStatus.CREATED;
+import static uz.pdp.pdperp.entity.enums.LessonStatus.STARTED;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +32,7 @@ public class GroupService {
     private final ModelMapper modelMapper;
     private final LessonRepository lessonRepository;
 
-    public String create(GroupCreateDto dto) {
+    public String create(GroupCreateDTD dto) {
         MentorEntity mentor = mentorRepository.findById(dto.getMentorId()).orElseThrow(
                 () -> new DataNotFoundException("mentor not fount"));
         Course course = courseRepository.findById(dto.getCursId()).orElseThrow(
@@ -38,16 +41,6 @@ public class GroupService {
         group.setCourse(course);
         group.setMentorEntity(mentor);
         groupRepository.save(group);
-
-        for (int i = 1; i <= 12; i++) {
-            Lesson lesson = Lesson.builder()
-                    .group(group)
-                    .lessonNumber(i)
-                    .module(1)
-                    .status(CREATED)
-                    .build();
-            lessonRepository.save(lesson);
-        }
 
         return "create";
     }
@@ -60,9 +53,18 @@ public class GroupService {
     }
 
     public Group update(UUID groupId, UpdateGroupDto dto) {
-
-        Group group = groupRepository.findById(groupId).orElseThrow(
-                () -> new DataNotFoundException("group not found"));
+        Group group = findById(groupId);
+        if(dto.getStatus().equals(STARTED)) {
+            for (int i = 1; i <= 12; i++) {
+                Lesson lesson = Lesson.builder()
+                        .group(group)
+                        .lessonNumber(i)
+                        .module(1)
+                        .status(CREATED)
+                        .build();
+                lessonRepository.save(lesson);
+            }
+        }
         modelMapper.map(dto, group);
         return groupRepository.save(group);
     }
@@ -76,6 +78,12 @@ public class GroupService {
         lessonRepository.deleteAll(lessonRepository.findLessonsByGroup_Id(groupId));
         groupRepository.deleteById(groupId);
         return "delete✅";
+    }
+
+
+    private Group findById(UUID id) {
+        return groupRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("group not found"));
     }
 
 }

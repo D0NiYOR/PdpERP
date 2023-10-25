@@ -17,4 +17,5 @@ public class MentorEntity extends BaseEntity {
     private String languageName;
     private Double experience;
     private Double salary;
+    private boolean delete;
 }

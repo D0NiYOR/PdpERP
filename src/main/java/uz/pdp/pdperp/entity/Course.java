@@ -25,5 +25,5 @@ public class Course extends BaseEntity {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Integer moduleCount;
-
+    private boolean delete;
 }

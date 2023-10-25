@@ -4,88 +4,84 @@ package uz.pdp.pdperp.service;
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.pdp.pdperp.DTOS.request.AuthDto;
+import uz.pdp.pdperp.DTOS.request.ResetPasswordDto;
 import uz.pdp.pdperp.DTOS.request.UserCreateDto;
 import uz.pdp.pdperp.DTOS.responce.JwtResponse;
+import uz.pdp.pdperp.DTOS.responce.UserResponseDTO;
+import uz.pdp.pdperp.entity.VerificationEntity;
 import uz.pdp.pdperp.entity.enums.Permission;
 import uz.pdp.pdperp.entity.UserEntity;
 import uz.pdp.pdperp.entity.enums.UserRole;
+import uz.pdp.pdperp.exception.BadRequestException;
 import uz.pdp.pdperp.exception.DataAlreadyExistsException;
 import uz.pdp.pdperp.exception.DataNotFoundException;
 import uz.pdp.pdperp.config.jwt.JwtService;
+import uz.pdp.pdperp.exception.DuplicateValueException;
 import uz.pdp.pdperp.repository.UserRepository;
 
 import java.time.LocalDateTime;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final ModelMapper modelMapper;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final ModelMapper modelMapper;
 
-    public String add(UserCreateDto dto) {
-        Optional<UserEntity> userEntity = userRepository.findByUsername(dto.getUsername());
-        if (userEntity.isPresent()) {
-            throw new DataAlreadyExistsException("User already exists");
-        }
-        UserEntity map = modelMapper.map(dto, UserEntity.class);
-        setPermissions(map, dto.getPermissions());
-        map.setPassword(passwordEncoder.encode(map.getPassword()));
-        userRepository.save(map);
-        return "Successfully signed up";
+
+    public List<UserResponseDTO> getAll(Integer page, Integer size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "name");
+        return modelMapper.map(userRepository.getAll(PageRequest.of(page, size, sort)).getContent(),
+                new TypeToken<List<UserResponseDTO>>() {}.getType());
     }
 
-    public UserEntity setPermissions(UserEntity userEntity, Set<String> permissions) {
-        Set<Permission> collect = permissions.stream().map(permission -> Permission.valueOf(permission.toUpperCase())).collect(Collectors.toSet());
-        userEntity.setPermissions(collect);
-        return userEntity;
-    }
 
-    public JwtResponse signIn(AuthDto dto) {
-        UserEntity user = userRepository.findByUsername(dto.getUsername()).orElseThrow(() -> new DataNotFoundException("user not found"));
-        if (passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
-            return new JwtResponse(jwtService.generateToken(user));
-        }
-        throw new AuthenticationCredentialsNotFoundException("password didn't match");
-    }
 
-    public List<UserEntity> getAll() {
-        return userRepository.findAll();
-    }
-
-    public UserEntity updateRole(UUID id, String role) {
+    public UserResponseDTO updateRole(UUID id, String role) {
         UserEntity userEntity = findById(id);
         userEntity.setRole(UserRole.valueOf(role));
-        return userRepository.save(userEntity);
+        return modelMapper.map(userRepository.save(userEntity), UserResponseDTO.class);
     }
 
-    public UserEntity updatePermission(UUID id, Set<Permission> permissions) {
 
+    public UserResponseDTO updatePermission(UUID id, Set<Permission> permissions) {
         UserEntity userEntity = findById(id);
         userEntity.setPermissions(permissions);
-        return userRepository.save(userEntity);
+        return modelMapper.map(userRepository.save(userEntity), UserResponseDTO.class);
+    }
+
+    public UserResponseDTO addPermission(UUID userID, String permission) {
+        UserEntity user = findById(userID);
+
+        try {
+            user.setRole(UserRole.valueOf(permission));
+            return modelMapper.map(userRepository.save(user), UserResponseDTO.class);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Enum type not valid: " + permission);
+        }
     }
 
     public String delete(UUID userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new DataNotFoundException("user not found");
-        }
-        userRepository.deleteById(userId);
+        UserEntity user = findById(userId);
+        user.setDelete(true);
+        userRepository.save(user);
         return "user delete";
     }
 
-    private UserEntity findById(UUID userId) {
+
+    public UserEntity findById(UUID userId) {
         return userRepository.findById(userId).orElseThrow(() -> new DataNotFoundException("user not found"));
     }
+
 }
